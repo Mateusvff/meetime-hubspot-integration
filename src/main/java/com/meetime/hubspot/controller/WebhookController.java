@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.dto.webhook.ContactCreatedWebhook;
 import com.meetime.hubspot.service.WebhookService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +14,11 @@ import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 
 @RestController
 @RequestMapping("/webhook")
+@RequiredArgsConstructor
 public class WebhookController {
 
     private final OAuthProperties oAuthProperties;
     private final WebhookService webhookService;
-
-    public WebhookController(OAuthProperties oAuthProperties, WebhookService webhookService) {
-        this.oAuthProperties = oAuthProperties;
-        this.webhookService = webhookService;
-    }
 
     @PostMapping("/receive")
     public ResponseEntity<?> receiveWebhook(@RequestHeader("X-HubSpot-Signature") String signature,

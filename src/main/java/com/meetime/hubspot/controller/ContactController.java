@@ -4,6 +4,7 @@ import com.meetime.hubspot.dto.contact.CreateContactRequest;
 import com.meetime.hubspot.service.ContactService;
 import io.github.bucket4j.Bucket;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,15 +17,11 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/contacts")
+@RequiredArgsConstructor
 public class ContactController {
 
     private final ContactService contactService;
     private final Bucket bucket;
-
-    public ContactController(ContactService contactService, Bucket bucket) {
-        this.contactService = contactService;
-        this.bucket = bucket;
-    }
 
     @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createContact(@RequestBody @Valid CreateContactRequest createContactRequest) {

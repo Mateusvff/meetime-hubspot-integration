@@ -5,6 +5,7 @@ import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.dto.auth.ExchangeForTokenResponse;
 import com.meetime.hubspot.dto.auth.TokenInformation;
 import com.meetime.hubspot.util.FileUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,17 +13,13 @@ import org.springframework.stereotype.Service;
 import static com.meetime.hubspot.util.Constants.TOKEN_FILE_PATH;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
     private final HubSpotClient hubSpotClient;
     private final OAuthProperties oAuthProperties;
-
-    public TokenService(HubSpotClient hubSpotClient, OAuthProperties oAuthProperties) {
-        this.hubSpotClient = hubSpotClient;
-        this.oAuthProperties = oAuthProperties;
-    }
 
     public TokenInformation getToken() {
         TokenInformation token = FileUtils.readFromFile(TOKEN_FILE_PATH, TokenInformation.class);

@@ -6,6 +6,7 @@ import com.meetime.hubspot.dto.auth.AuthorizationURL;
 import com.meetime.hubspot.dto.auth.ExchangeForTokenResponse;
 import com.meetime.hubspot.dto.auth.TokenInformation;
 import com.meetime.hubspot.util.FileUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,17 +17,13 @@ import java.net.URI;
 import static com.meetime.hubspot.util.Constants.TOKEN_FILE_PATH;
 
 @Service
+@RequiredArgsConstructor
 public class OAuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(OAuthService.class);
 
     private final HubSpotClient hubSpotClient;
     private final OAuthProperties oAuthProperties;
-
-    public OAuthService(OAuthProperties oAuthProperties, HubSpotClient hubSpotClient) {
-        this.oAuthProperties = oAuthProperties;
-        this.hubSpotClient = hubSpotClient;
-    }
 
     public AuthorizationURL retrieveAuthorizationUrl() {
         logger.info("Generating Authorization URL");
