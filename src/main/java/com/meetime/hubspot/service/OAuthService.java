@@ -5,6 +5,8 @@ import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.domain.auth.AuthorizationURL;
 import com.meetime.hubspot.domain.auth.ExchangeForTokenResponse;
 import com.meetime.hubspot.domain.auth.TokenInformation;
+import com.meetime.hubspot.exception.AuthorizationException;
+import com.meetime.hubspot.exception.HubSpotException;
 import com.meetime.hubspot.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +39,8 @@ public class OAuthService {
                     .queryParam("scope", oAuthProperties.getScope())
                     .build().encode().toUriString();
         } catch (Exception e) {
-            throw new RuntimeException("Error generating authorization URL", e);
+            log.error("Error generating authorization URL", e);
+            throw new AuthorizationException("Error generating authorization URL");
         }
     }
 
@@ -59,7 +62,8 @@ public class OAuthService {
                     authorizationCode
             );
         } catch (Exception e) {
-            throw new RuntimeException("Error while exchanging authorization code for access token", e);
+            log.error("Error while exchanging authorization code for access token", e);
+            throw new HubSpotException("Error while exchanging authorization code for access token");
         }
     }
 
