@@ -36,7 +36,7 @@ public class TokenService {
         TokenInformation tokenInformation = FileUtils.readFromFile(TOKEN_FILE_PATH, TokenInformation.class);
         ExchangeForTokenResponse refreshTokenResponse = callRefreshTokenAPI(tokenInformation);
 
-        FileUtils.writeToFile(TOKEN_FILE_PATH, TokenInformation.fromResponse(refreshTokenResponse));
+        FileUtils.writeToFile(TOKEN_FILE_PATH, new TokenInformation(refreshTokenResponse));
     }
 
     private ExchangeForTokenResponse callRefreshTokenAPI(TokenInformation tokenInformation) {
@@ -45,7 +45,7 @@ public class TokenService {
                     "refresh_token",
                     oAuthProperties.getClientId(),
                     oAuthProperties.getClientSecret(),
-                    tokenInformation.getRefreshToken()
+                    tokenInformation.refreshToken()
             );
         } catch (Exception e) {
             throw new RuntimeException("Error while calling refresh token API", e);
