@@ -3,14 +3,13 @@ package com.meetime.hubspot.service;
 import com.meetime.hubspot.client.HubSpotClient;
 import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.domain.auth.ExchangeForTokenResponse;
-import com.meetime.hubspot.domain.auth.TokenInformation;
 import com.meetime.hubspot.exception.HubSpotException;
-import com.meetime.hubspot.util.FileUtils;
+import com.meetime.hubspot.exception.TokenNotFoundException;
+import com.meetime.hubspot.model.TokenInformation;
+import com.meetime.hubspot.repository.TokenInformationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import static com.meetime.hubspot.util.Constants.TOKEN_FILE_PATH;
 
 @Slf4j
 @Service
@@ -18,40 +17,46 @@ import static com.meetime.hubspot.util.Constants.TOKEN_FILE_PATH;
 public class TokenService {
 
     private final HubSpotClient hubSpotClient;
+    private final TokenInformationRepository tokenInformationRepository;
     private final OAuthProperties oAuthProperties;
 
-    public TokenInformation getToken() {
-        TokenInformation token = FileUtils.readFromFile(TOKEN_FILE_PATH, TokenInformation.class);
+    public String getAccessToken() {
+        TokenInformation token = retrieveTokenInformation();
 
         if (token.isExpired()) {
-            refreshToken();
-            token = FileUtils.readFromFile(TOKEN_FILE_PATH, TokenInformation.class);
+            refreshToken(token);
+            token = retrieveTokenInformation();
         }
 
-        return token;
+        return token.getAccessToken();
     }
 
-    public void refreshToken() {
+    public void refreshToken(TokenInformation token) {
         log.info("Refreshing access token");
 
-        TokenInformation tokenInformation = FileUtils.readFromFile(TOKEN_FILE_PATH, TokenInformation.class);
-        ExchangeForTokenResponse refreshTokenResponse = callRefreshTokenAPI(tokenInformation);
-
-        FileUtils.writeToFile(TOKEN_FILE_PATH, new TokenInformation(refreshTokenResponse));
+        ExchangeForTokenResponse refreshTokenResponse = callRefreshTokenAPI(token);
+        tokenInformationRepository.save(new TokenInformation(refreshTokenResponse.accessToken(), token.getRefreshToken(), refreshTokenResponse.expiresIn()));
     }
 
-    private ExchangeForTokenResponse callRefreshTokenAPI(TokenInformation tokenInformation) {
+    private ExchangeForTokenResponse callRefreshTokenAPI(TokenInformation token) {
         try {
             return hubSpotClient.refreshToken(
                     "refresh_token",
                     oAuthProperties.getClientId(),
                     oAuthProperties.getClientSecret(),
-                    tokenInformation.refreshToken()
+                    token.getRefreshToken()
             );
         } catch (Exception e) {
             log.error("Error while calling refresh token API", e);
             throw new HubSpotException("Error while calling refresh token API");
         }
+    }
+
+    private TokenInformation retrieveTokenInformation() {
+        log.info("Retrieving latest token information");
+
+        return tokenInformationRepository.findTopByOrderByExpiresAtDesc()
+                .orElseThrow(() -> new TokenNotFoundException("Token not found"));
     }
 
 }

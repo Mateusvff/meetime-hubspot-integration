@@ -4,10 +4,10 @@ import com.meetime.hubspot.client.HubSpotClient;
 import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.domain.auth.AuthorizationURL;
 import com.meetime.hubspot.domain.auth.ExchangeForTokenResponse;
-import com.meetime.hubspot.domain.auth.TokenInformation;
 import com.meetime.hubspot.exception.AuthorizationException;
 import com.meetime.hubspot.exception.HubSpotException;
-import com.meetime.hubspot.util.FileUtils;
+import com.meetime.hubspot.model.TokenInformation;
+import com.meetime.hubspot.repository.TokenInformationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,14 +15,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.meetime.hubspot.util.Constants.TOKEN_FILE_PATH;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
 
     private final HubSpotClient hubSpotClient;
+    private final TokenInformationRepository tokenInformationRepository;
     private final OAuthProperties oAuthProperties;
 
     public AuthorizationURL retrieveAuthorizationUrl() {
@@ -45,10 +44,8 @@ public class OAuthService {
     }
 
     public void handleCallback(String authorizationCode) {
-        var tokenExchangeResponse = exchangeForToken(authorizationCode);
-        var token = new TokenInformation(tokenExchangeResponse);
-
-        FileUtils.writeToFile(TOKEN_FILE_PATH, token);
+        var token = exchangeForToken(authorizationCode);
+        tokenInformationRepository.save(new TokenInformation(token.accessToken(), token.refreshToken(), token.expiresIn()));
     }
 
     private ExchangeForTokenResponse exchangeForToken(String authorizationCode) {
