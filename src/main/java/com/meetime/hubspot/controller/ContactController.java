@@ -3,6 +3,7 @@ package com.meetime.hubspot.controller;
 import com.meetime.hubspot.domain.contact.CreateContactRequest;
 import com.meetime.hubspot.service.ContactService;
 import io.github.bucket4j.Bucket;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class ContactController {
     private final Bucket bucket;
 
     @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "API responsible for creating a contact in the CRM with Rate Limit policies.")
     public ResponseEntity<?> createContact(@RequestBody @Valid CreateContactRequest createContactRequest) {
         if (!bucket.tryConsume(1)) {
             return ResponseEntity.status(TOO_MANY_REQUESTS).body("Rate limit exceeded");

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.domain.webhook.ContactCreatedWebhook;
 import com.meetime.hubspot.service.WebhookService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class WebhookController {
     private final WebhookService webhookService;
 
     @PostMapping("/receive")
+    @Operation(summary = "API responsible for receiving the webhook from HubSpot and processing it.")
     public ResponseEntity<?> receiveWebhook(@RequestHeader("X-HubSpot-Signature") String signature,
                                             @RequestBody String requestBody) throws JsonProcessingException {
         String clientSecret = oAuthProperties.getClientSecret();
