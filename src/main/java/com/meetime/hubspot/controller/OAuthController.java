@@ -1,6 +1,6 @@
 package com.meetime.hubspot.controller;
 
-import com.meetime.hubspot.dto.auth.AuthorizationURL;
+import com.meetime.hubspot.domain.auth.AuthorizationURL;
 import com.meetime.hubspot.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

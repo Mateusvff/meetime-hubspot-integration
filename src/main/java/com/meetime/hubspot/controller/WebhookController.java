@@ -3,7 +3,7 @@ package com.meetime.hubspot.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetime.hubspot.config.OAuthProperties;
-import com.meetime.hubspot.dto.webhook.ContactCreatedWebhook;
+import com.meetime.hubspot.domain.webhook.ContactCreatedWebhook;
 import com.meetime.hubspot.service.WebhookService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;

@@ -1,6 +1,6 @@
 package com.meetime.hubspot.controller;
 
-import com.meetime.hubspot.dto.contact.CreateContactRequest;
+import com.meetime.hubspot.domain.contact.CreateContactRequest;
 import com.meetime.hubspot.service.ContactService;
 import io.github.bucket4j.Bucket;
 import jakarta.validation.Valid;

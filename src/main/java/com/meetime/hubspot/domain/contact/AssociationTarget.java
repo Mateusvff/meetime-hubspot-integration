@@ -1,14 +1,10 @@
-package com.meetime.hubspot.dto.contact;
+package com.meetime.hubspot.domain.contact;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
 
-@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AssociationTarget {
-
-    private Long id;
+public record AssociationTarget(Long id) {
 
 }

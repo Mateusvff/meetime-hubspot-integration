@@ -1,7 +1,7 @@
 package com.meetime.hubspot.client;
 
-import com.meetime.hubspot.dto.auth.ExchangeForTokenResponse;
-import com.meetime.hubspot.dto.contact.CreateContactRequest;
+import com.meetime.hubspot.domain.auth.ExchangeForTokenResponse;
+import com.meetime.hubspot.domain.contact.CreateContactRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

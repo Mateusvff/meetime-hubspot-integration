@@ -2,9 +2,9 @@ package com.meetime.hubspot.service;
 
 import com.meetime.hubspot.client.HubSpotClient;
 import com.meetime.hubspot.config.OAuthProperties;
-import com.meetime.hubspot.dto.auth.AuthorizationURL;
-import com.meetime.hubspot.dto.auth.ExchangeForTokenResponse;
-import com.meetime.hubspot.dto.auth.TokenInformation;
+import com.meetime.hubspot.domain.auth.AuthorizationURL;
+import com.meetime.hubspot.domain.auth.ExchangeForTokenResponse;
+import com.meetime.hubspot.domain.auth.TokenInformation;
 import com.meetime.hubspot.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +42,9 @@ public class OAuthService {
     }
 
     public void handleCallback(String authorizationCode) {
-        ExchangeForTokenResponse exchangeForTokenResponse = exchangeForToken(authorizationCode);
+        var tokenExchangeResponse = exchangeForToken(authorizationCode);
+        var token = new TokenInformation(tokenExchangeResponse);
 
-        TokenInformation token = TokenInformation.fromResponse(exchangeForTokenResponse);
         FileUtils.writeToFile(TOKEN_FILE_PATH, token);
     }
 

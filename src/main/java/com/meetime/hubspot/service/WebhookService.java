@@ -1,6 +1,6 @@
 package com.meetime.hubspot.service;
 
-import com.meetime.hubspot.dto.webhook.ContactCreatedWebhook;
+import com.meetime.hubspot.domain.webhook.ContactCreatedWebhook;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
