@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.domain.ErrorResponse;
 import com.meetime.hubspot.domain.webhook.ContactCreatedWebhook;
+import com.meetime.hubspot.exception.InvalidWebhookSignatureException;
 import com.meetime.hubspot.service.WebhookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 
 @RestController
 @RequestMapping("/webhook")
@@ -39,7 +38,7 @@ public class WebhookController {
         String expectedSignature = DigestUtils.sha256Hex(clientSecret + requestBody);
 
         if (!expectedSignature.equals(signature)) {
-            return ResponseEntity.status(UNAUTHORIZED).body("Invalid webhook signature");
+            throw new InvalidWebhookSignatureException("Invalid webhook signature");
         }
 
         ContactCreatedWebhook[] webhooks = new ObjectMapper().readValue(requestBody, ContactCreatedWebhook[].class);

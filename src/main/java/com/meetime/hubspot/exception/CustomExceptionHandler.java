@@ -1,6 +1,8 @@
 package com.meetime.hubspot.exception;
 
+import com.meetime.hubspot.domain.ErrorResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -16,7 +18,11 @@ public class CustomExceptionHandler {
                 .body(new ErrorResponse(Instant.now(), ex.getStatus().value(), ex.getStatus().getReasonPhrase(), ex.getMessage()));
     }
 
-    public record ErrorResponse(Instant timestamp, int status, String error, String message) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return ResponseEntity
+                .status(ex.getStatusCode())
+                .body(new ErrorResponse(Instant.now(), ex.getStatusCode().value(), "Bad request", ex.getMessage()));
     }
 
 }
