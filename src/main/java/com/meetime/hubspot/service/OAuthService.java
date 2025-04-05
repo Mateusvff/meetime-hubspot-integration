@@ -5,12 +5,15 @@ import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.dto.auth.AuthorizationURL;
 import com.meetime.hubspot.dto.auth.ExchangeForTokenResponse;
 import com.meetime.hubspot.dto.auth.TokenInformation;
+import com.meetime.hubspot.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+
+import static com.meetime.hubspot.util.Constants.TOKEN_FILE_PATH;
 
 @Service
 public class OAuthService {
@@ -19,12 +22,10 @@ public class OAuthService {
 
     private final HubSpotClient hubSpotClient;
     private final OAuthProperties oAuthProperties;
-    private final TokenService tokenService;
 
-    public OAuthService(OAuthProperties oAuthProperties, HubSpotClient hubSpotClient, TokenService tokenService) {
+    public OAuthService(OAuthProperties oAuthProperties, HubSpotClient hubSpotClient) {
         this.oAuthProperties = oAuthProperties;
         this.hubSpotClient = hubSpotClient;
-        this.tokenService = tokenService;
     }
 
     public AuthorizationURL retrieveAuthorizationUrl() {
@@ -49,7 +50,7 @@ public class OAuthService {
         ExchangeForTokenResponse exchangeForTokenResponse = exchangeForToken(authorizationCode);
 
         TokenInformation token = TokenInformation.fromResponse(exchangeForTokenResponse);
-        tokenService.writeToFile(token);
+        FileUtils.writeToFile(TOKEN_FILE_PATH, token);
     }
 
     private ExchangeForTokenResponse exchangeForToken(String authorizationCode) {
