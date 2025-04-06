@@ -1,4 +1,4 @@
-package com.meetime.hubspot.service;
+package com.meetime.hubspot.unit.service;
 
 import com.meetime.hubspot.client.HubSpotClient;
 import com.meetime.hubspot.config.OAuthProperties;
@@ -7,6 +7,7 @@ import com.meetime.hubspot.exception.HubSpotException;
 import com.meetime.hubspot.exception.TokenNotFoundException;
 import com.meetime.hubspot.model.TokenInformation;
 import com.meetime.hubspot.repository.TokenInformationRepository;
+import com.meetime.hubspot.service.TokenService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

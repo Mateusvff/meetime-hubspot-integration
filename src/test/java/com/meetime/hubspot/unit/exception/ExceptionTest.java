@@ -1,5 +1,6 @@
-package com.meetime.hubspot.exception;
+package com.meetime.hubspot.unit.exception;
 
+import com.meetime.hubspot.exception.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 

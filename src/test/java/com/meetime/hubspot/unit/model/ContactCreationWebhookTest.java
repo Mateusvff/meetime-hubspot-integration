@@ -1,6 +1,7 @@
-package com.meetime.hubspot.model;
+package com.meetime.hubspot.unit.model;
 
 import com.meetime.hubspot.domain.webhook.ContactCreatedWebhook;
+import com.meetime.hubspot.model.ContactCreationWebhook;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

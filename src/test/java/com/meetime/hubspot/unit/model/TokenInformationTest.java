@@ -1,6 +1,7 @@
-package com.meetime.hubspot.model;
+package com.meetime.hubspot.unit.model;
 
 import com.meetime.hubspot.domain.auth.ExchangeForTokenResponse;
+import com.meetime.hubspot.model.TokenInformation;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

@@ -1,8 +1,9 @@
-package com.meetime.hubspot.service;
+package com.meetime.hubspot.unit.service;
 
 import com.meetime.hubspot.domain.webhook.ContactCreatedWebhook;
 import com.meetime.hubspot.model.ContactCreationWebhook;
 import com.meetime.hubspot.repository.ContactCreationWebhookRepository;
+import com.meetime.hubspot.service.WebhookService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
