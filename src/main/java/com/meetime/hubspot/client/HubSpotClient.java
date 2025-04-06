@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@FeignClient(name = "hubspot", url = "https://api.hubapi.com")
+@FeignClient(name = "hubspotClient", url = "${hubspot.api.url}")
 public interface HubSpotClient {
 
     @PostMapping(value = "/oauth/v1/token", consumes = APPLICATION_FORM_URLENCODED_VALUE)
