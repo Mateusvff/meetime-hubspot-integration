@@ -1,5 +1,6 @@
 package com.meetime.hubspot.model;
 
+import com.meetime.hubspot.domain.auth.ExchangeForTokenResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,14 @@ public class TokenInformation {
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;
         this.expiresAt = Instant.now().plusSeconds(expiresIn - 60);
+    }
+
+    public TokenInformation update(ExchangeForTokenResponse exchangeForTokenResponse) {
+        this.accessToken = exchangeForTokenResponse.accessToken();
+        this.refreshToken = exchangeForTokenResponse.refreshToken();
+        this.expiresIn = exchangeForTokenResponse.expiresIn();
+        this.expiresAt = Instant.now().plusSeconds(expiresIn - 60);
+        return this;
     }
 
     public boolean isExpired() {

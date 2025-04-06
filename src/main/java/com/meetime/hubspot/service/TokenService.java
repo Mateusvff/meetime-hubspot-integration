@@ -24,18 +24,20 @@ public class TokenService {
         TokenInformation token = retrieveTokenInformation();
 
         if (token.isExpired()) {
-            refreshToken(token);
-            token = retrieveTokenInformation();
+            token = refreshToken(token);
         }
 
         return token.getAccessToken();
     }
 
-    public void refreshToken(TokenInformation token) {
+    public TokenInformation refreshToken(TokenInformation token) {
         log.info("Refreshing access token");
 
         ExchangeForTokenResponse refreshTokenResponse = callRefreshTokenAPI(token);
-        tokenInformationRepository.save(new TokenInformation(refreshTokenResponse.accessToken(), token.getRefreshToken(), refreshTokenResponse.expiresIn()));
+        var refreshedToken = token.update(refreshTokenResponse);
+
+        tokenInformationRepository.save(refreshedToken);
+        return refreshedToken;
     }
 
     private ExchangeForTokenResponse callRefreshTokenAPI(TokenInformation token) {
