@@ -20,7 +20,7 @@ public class TokenService {
     private final TokenInformationRepository tokenInformationRepository;
     private final OAuthProperties oAuthProperties;
 
-    public String getAccessToken() {
+    public String retrieveAccessToken() {
         TokenInformation token = retrieveTokenInformation();
 
         if (token.isExpired()) {

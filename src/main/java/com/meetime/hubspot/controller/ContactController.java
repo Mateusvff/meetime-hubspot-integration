@@ -37,8 +37,10 @@ public class ContactController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createContact(@RequestBody @Valid CreateContactRequest createContactRequest) {
-        if (!bucket.tryConsume(1)) throw new RateLimitException("Rate limit exceeded");
+    public ResponseEntity<Void> createContact(@RequestBody @Valid CreateContactRequest createContactRequest) {
+        if (!bucket.tryConsume(1)) {
+            throw new RateLimitException("Rate limit exceeded");
+        }
 
         contactService.createContact(createContactRequest);
         return ResponseEntity.status(CREATED).build();

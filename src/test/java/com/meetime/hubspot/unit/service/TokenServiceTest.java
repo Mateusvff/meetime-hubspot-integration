@@ -44,7 +44,7 @@ public class TokenServiceTest {
         when(token.isExpired()).thenReturn(false);
         when(token.getAccessToken()).thenReturn("access_token");
 
-        String accessToken = tokenService.getAccessToken();
+        String accessToken = tokenService.retrieveAccessToken();
 
         assertEquals("access_token", accessToken);
     }
@@ -61,7 +61,7 @@ public class TokenServiceTest {
         when(expiredToken.update(exchangeForTokenResponse)).thenReturn(refreshedToken);
         when(refreshedToken.getAccessToken()).thenReturn("accessToken");
 
-        String accessToken = tokenService.getAccessToken();
+        String accessToken = tokenService.retrieveAccessToken();
 
         assertEquals("accessToken", accessToken);
         verify(tokenInformationRepository).save(refreshedToken);
@@ -75,14 +75,14 @@ public class TokenServiceTest {
         when(expiredToken.isExpired()).thenReturn(true);
         when(hubSpotClient.refreshToken(any(), any(), any(), any())).thenThrow(new RuntimeException("Error"));
 
-        Assertions.assertThrows(HubSpotException.class, tokenService::getAccessToken);
+        Assertions.assertThrows(HubSpotException.class, tokenService::retrieveAccessToken);
     }
 
     @Test
     void shouldThrowTokenNotFoundExceptionWhenNoTokenFound() {
         when(tokenInformationRepository.findTopByOrderByExpiresAtDesc()).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(TokenNotFoundException.class, tokenService::getAccessToken);
+        Assertions.assertThrows(TokenNotFoundException.class, tokenService::retrieveAccessToken);
     }
 
     @Test

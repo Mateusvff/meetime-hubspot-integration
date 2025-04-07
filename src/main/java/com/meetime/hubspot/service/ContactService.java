@@ -17,7 +17,7 @@ public class ContactService {
 
     public void createContact(CreateContactRequest createContactRequest) {
         log.info("Creating contact in CRM");
-        String authorizationHeader = "Bearer " + tokenService.getAccessToken();
+        String authorizationHeader = "Bearer " + tokenService.retrieveAccessToken();
 
         try {
             hubSpotClient.createContact(authorizationHeader, createContactRequest);

@@ -32,7 +32,7 @@ public class WebhookController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/receive")
-    public ResponseEntity<?> receiveWebhook(@RequestHeader("X-HubSpot-Signature") String signature,
+    public ResponseEntity<Void> receiveWebhook(@RequestHeader("X-HubSpot-Signature") String signature,
                                             @RequestBody String requestBody) throws JsonProcessingException {
         String clientSecret = oAuthProperties.getClientSecret();
         String expectedSignature = DigestUtils.sha256Hex(clientSecret + requestBody);

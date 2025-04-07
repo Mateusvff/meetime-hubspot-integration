@@ -29,7 +29,7 @@ public class ContactServiceTest {
     @Test
     void shouldCreateContact() {
         CreateContactRequest createContactRequest = mock(CreateContactRequest.class);
-        when(tokenService.getAccessToken()).thenReturn("access_token");
+        when(tokenService.retrieveAccessToken()).thenReturn("access_token");
 
         contactService.createContact(createContactRequest);
 
@@ -40,7 +40,7 @@ public class ContactServiceTest {
     void shouldThrowHubSpotExceptionWhenCreatingContact() {
         CreateContactRequest createContactRequest = mock(CreateContactRequest.class);
 
-        when(tokenService.getAccessToken()).thenReturn("access_token");
+        when(tokenService.retrieveAccessToken()).thenReturn("access_token");
 
         doThrow(new RuntimeException("Error"))
                 .when(hubSpotClient)
