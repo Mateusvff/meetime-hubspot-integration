@@ -8,9 +8,9 @@ import com.meetime.hubspot.config.OAuthProperties;
 import com.meetime.hubspot.domain.contact.CreateContactRequest;
 import com.meetime.hubspot.domain.contact.Property;
 import io.github.bucket4j.Bucket;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,11 +18,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {"hubspot.api.url=http://localhost:8089"})
+@SpringBootTest(properties = {"hubspot.api.url=http://localhost:8082"})
 @AutoConfigureMockMvc
 public class ContactControllerIntegrationTest {
 
@@ -35,18 +36,43 @@ public class ContactControllerIntegrationTest {
     @MockitoBean
     private Bucket bucket;
 
+    private WireMockServer wireMockServer;
+
     @BeforeEach
     void setup() {
-        WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8089));
+        wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
         wireMockServer.start();
-        configureFor("localhost", 8089);
+        configureFor("localhost", 8082);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (wireMockServer != null && wireMockServer.isRunning()) {
+            wireMockServer.stop();
+        }
     }
 
     @Test
     void testCreateContact() throws Exception {
+        when(bucket.tryConsume(1)).thenReturn(true);
+
         Property properties = new Property("email", "", "", "", "", "", "");
         CreateContactRequest createContactRequest = new CreateContactRequest(properties, null);
         String requestBody = new ObjectMapper().writeValueAsString(createContactRequest);
+
+        when(oAuthProperties.getClientId()).thenReturn("client_id");
+        when(oAuthProperties.getClientSecret()).thenReturn("client_secret");
+
+        // Mocking the Refresh Token HubSpot API Call
+        WireMock.stubFor(WireMock.post(WireMock.urlPathEqualTo("/oauth/v1/token"))
+                .withQueryParam("grant_type", WireMock.equalTo("refresh_token"))
+                .withQueryParam("client_id", WireMock.equalTo("client_id"))
+                .withQueryParam("client_secret", WireMock.equalTo("client_secret"))
+                .withQueryParam("refresh_token", WireMock.equalTo("refresh_token"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"access_token\": \"access_token\", \"refresh_token\": \"refresh_token\", \"expires_in\": 3600}")));
 
         WireMock.stubFor(WireMock.post(WireMock.urlPathEqualTo("/crm/v3/objects/contacts"))
                 .withHeader("Authorization", WireMock.equalTo("Bearer access_token"))
@@ -64,7 +90,7 @@ public class ContactControllerIntegrationTest {
 
     @Test
     void testCreateContactWithRateLimitExceeded() throws Exception {
-        Mockito.when(bucket.tryConsume(1)).thenReturn(false);
+        when(bucket.tryConsume(1)).thenReturn(false);
 
         Property properties = new Property("email", "", "", "", "", "", "");
         CreateContactRequest createContactRequest = new CreateContactRequest(properties, null);
