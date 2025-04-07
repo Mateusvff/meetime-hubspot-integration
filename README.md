@@ -74,8 +74,13 @@ A aplicação permite gerar a URL de autorização, tratar o callback com o cód
    https://meetime-int-hubspot-v1.loca.lt
    ```
    **Importante:** Utilize essa URL para a configuração do webhook no HubSpot. Caso esteja utilizando as credenciais já configuradas no arquivo `.env`, não será preciso configurar nada no HubSpot.
+<br><br>
 
+### 📝 Documentação Swagger
+Após a execução da aplicação, a documentação Swagger estará disponível nos endereços:
+> http://localhost:8080/swagger-ui/index.html#/
 
+> https://meetime-int-hubspot-v1.loca.lt/swagger-ui/index.html#/
 
 ## 🧠 Referências
 
