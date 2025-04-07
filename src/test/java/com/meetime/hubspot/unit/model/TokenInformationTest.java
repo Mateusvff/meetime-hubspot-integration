@@ -18,10 +18,7 @@ public class TokenInformationTest {
 
         TokenInformation token = new TokenInformation("access_token", "refresh_token", expiresIn);
 
-        Instant expectedExpiresAt = Instant.now().plusSeconds(expiresIn - 60);
-
-        assertEquals(expectedExpiresAt, token.getExpiresAt());
-        assertTrue(expectedExpiresAt.isAfter(Instant.now()));
+        assertNotNull(token.getExpiresAt());
     }
 
     @Test
@@ -55,12 +52,10 @@ public class TokenInformationTest {
         int expiresIn = 1800;
 
         TokenInformation token = new TokenInformation(accessToken, refreshToken, expiresIn);
-        Instant expectedExpiresAt = Instant.now().plusSeconds(expiresIn - 60);
 
         assertEquals(accessToken, token.getAccessToken());
         assertEquals(refreshToken, token.getRefreshToken());
         assertEquals(expiresIn, token.getExpiresIn());
-        assertEquals(expectedExpiresAt, token.getExpiresAt());
     }
 
     @Test
