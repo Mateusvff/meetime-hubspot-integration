@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
@@ -24,8 +26,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"hubspot.api.url=http://localhost:8082"})
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class ContactControllerIntegrationTest {
+class ContactControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,6 +56,7 @@ public class ContactControllerIntegrationTest {
     }
 
     @Test
+    @Sql("/insert-token-data.sql")
     void testCreateContact() throws Exception {
         when(bucket.tryConsume(1)).thenReturn(true);
 
