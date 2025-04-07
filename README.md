@@ -76,11 +76,22 @@ A aplicação permite gerar a URL de autorização, tratar o callback com o cód
    **Importante:** Utilize essa URL para a configuração do webhook no HubSpot. Caso esteja utilizando as credenciais já configuradas no arquivo `.env`, não será preciso configurar nada no HubSpot.
 <br><br>
 
-### 📝 Documentação Swagger
+## 📝 Documentação Swagger
+
 Após a execução da aplicação, a documentação Swagger estará disponível nos endereços:
 > http://localhost:8080/swagger-ui/index.html#/
 
 > https://meetime-int-hubspot-v1.loca.lt/swagger-ui/index.html#/
+
+
+## ✅ Testes Unitários e Integração
+
+O projeto conta com uma cobertura completa de testes unitários e de integração (39 casos de testes).
+
+#### Execução:
+```bash
+   ./mvnw test
+```
 
 ## 🧠 Referências
 
