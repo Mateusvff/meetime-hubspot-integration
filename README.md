@@ -57,12 +57,12 @@ A aplicação permite gerar a URL de autorização, tratar o callback com o cód
    <br><br>
    A aplicação precisa estar acessível publicamente para que os webhooks do HubSpot funcionem corretamente. Para isso, utilizei o [LocalTunnel](https://github.com/localtunnel/localtunnel) para criar uma URL pública temporária e validar o recebimento do webhook em ambiente de desenvolvimento.
  
-     ```bash
+   ```bash
     # Verifique se o Node.js está instalado
      node -v
      npx -v
-     ```
-     Caso o Node.js não esteja instalado, instale-o em: [Download Node.js](https://nodejs.org/)
+   ```
+   Caso o Node.js não esteja instalado, instale-o em: [Download Node.js](https://nodejs.org/)
 
    #### Comando para expor a aplicação:
    ```bash
