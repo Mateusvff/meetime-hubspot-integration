@@ -20,7 +20,7 @@ A aplicação permite gerar a URL de autorização, tratar o callback com o cód
 1. Clonar o repositório:
    ```bash
    git clone https://github.com/Mateusvff/meetime-hubspot-integration.git
-   cd hubspot
+   cd meetime-hubspot-integration
    ```
 
 2. Configurar as variáveis de ambiente no arquivo `.env`:
