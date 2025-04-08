@@ -19,7 +19,7 @@ A aplicação permite gerar a URL de autorização, tratar o callback com o cód
 
 1. Clonar o repositório:
    ```bash
-   https://github.com/Mateusvff/meetime-hubspot-integration.git
+   git clone https://github.com/Mateusvff/meetime-hubspot-integration.git
    cd hubspot
    ```
 
