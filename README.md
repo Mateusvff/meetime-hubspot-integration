@@ -1,7 +1,7 @@
 
-# Case Técnico: Integração HubSpot 💚
+# Case Técnico: Integração com HubSpot 💚
 
-Repositório destinado à entrega do Case Técnico: Integração HubSpot.
+Repositório destinado à entrega do Case Técnico: Integração com HubSpot.
 
 Este projeto é uma API REST desenvolvida em Java com Spring Boot, que realiza integração com a API do HubSpot utilizando o fluxo de autenticação OAuth 2.0.
 
@@ -74,7 +74,8 @@ A aplicação permite gerar a URL de autorização, tratar o callback com o cód
    https://meetime-int-hubspot-v1.loca.lt
    ```
    **Importante:** Utilize essa URL para a configuração do webhook no HubSpot. Caso esteja utilizando as credenciais já configuradas no arquivo `.env`, não será preciso configurar nada no HubSpot.
-<br><br>
+
+<br>
 
 ## 📝 Documentação Swagger
 
@@ -83,15 +84,77 @@ Após a execução da aplicação, a documentação Swagger estará disponível 
 
 > https://meetime-int-hubspot-v1.loca.lt/swagger-ui/index.html#/
 
+<br>
+
+## ⏩ Testando a aplicação
+Após a execução da aplicação através do comando `docker-compose up --build` e a criação correta dos containeres, a aplicação estará pronta para ser testada.
+
+### 1. Gerar a URL de autorização
+
+```bash
+   curl --location 'localhost:8080/oauth/authorize'
+```
+
+Ou, se estiver usando o localtunnel, conforme especificado no Passo 5:
+
+```bash
+   curl --location 'https://meetime-int-hubspot-v1.loca.lt/oauth/authorize'
+```
+
+Ao clicar na URL gerada, será solicito uma autenticação por parte do usuário.
+
+### 2. Recebimento do Callback e troca pelo Token de Acesso
+Após ter aceitado a vinculação com o aplicativo, a HubSpot irá enviar o código de autorização para o endpoint `/oauth/callback` através de um método **_GET_**.
+A aplicação então irá realizar uma chamada para a HubSpot solicitando a troca do código de autorização pelo Token de Acesso e o gravará em uma tabela no banco de dados `TOKEN_INFORMATION`
+
+Para visualizar o recebimento do callback, o log da aplicação/container pode ser consultado. <br>
+Além disso, pode-se visualizar as informações do token através do comando:
+
+```bash
+  docker exec -it postgres_db psql -U nome_do_usuario -d nome_do_banco
+  select * from token_information;
+```
+
+Caso esteja utilizando as credenciais definidas no arquivo `.env` pré-configurado:
+```bash
+  docker exec -it postgres_db psql -U postgres -d meetime
+  select * from token_information;
+```
+
+### 3. Criação de um contato no CRM
+Para testar a criação de um contato no CRM, pode-se realizar uma chamada **_POST_** no endpoint `api/contacts/create`:
+
+```bash
+  curl --location 'https://meetime-int-hubspot-v1.loca.lt/api/contacts/create' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "properties": {
+        "email": "contact_name@gmail.com"
+    }
+}'
+```
+
+Para visualizar todas as informações que podem ser enviadas para criação do contato, consulte a documentação da API disponível no Swagger `http://localhost:8080/swagger-ui/index.html#/`.
+
+### 4. Recebimento do Webhook
+O recebimento do Webhook de forma local só estará disponível caso tenha realizado a configuração do Localtunnel após a configuração do ambiente (Passo 5). <br>
+Caso sim, a aplicação receberá o webhook do tipo `contact.creation` e realizará o armazenamento das informações na tabela `CONTACT_CREATION_WEBOOK`.
+
+Caso esteja utilizando as credenciais definidas no arquivo `.env` pré-configurado:
+```bash
+  docker exec -it postgres_db psql -U postgres -d meetime
+  select * from contact_creation_webhook;
+```
+<br>
 
 ## ✅ Testes Unitários e Integração
-
 O projeto conta com uma cobertura completa de testes unitários e de integração (39 casos de testes).
 
 #### Execução:
 ```bash
    ./mvnw test
 ```
+<br>
 
 ## 🧠 Referências
 
